@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  email     String   @unique
+  login     String?  @unique
+  password  String?
+  google_id String?  @unique
+
+  @@map("account")
+}
+
+model Product {
+  id                 String           @id @unique @default(uuid())
+  createdAt          DateTime         @default(now()) @map("created_at")
+  updatedAt          DateTime         @updatedAt @map("updated_at")
+  name               String
+  description        String
+  weight             Int?             @default(0)
+  volume             Int?             @default(0)
+  price              Int
+  photoPath          String           @default("")
+  productCategoryrId String?          @map("product_category_id")
+  ProductCategory    ProductCategory? @relation(fields: [productCategoryrId], references: [id], onDelete: Cascade)
+
+  @@map("product")
+}
+
+model ProductCategory {
+  id        String    @id @unique @default(uuid())
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  name      String
+  Product   Product[]
+
+  @@map("product_category")
+}
+
+// model ProductIngredient {}
