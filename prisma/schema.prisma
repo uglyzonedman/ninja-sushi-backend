@@ -8,41 +8,52 @@ datasource db {
 }
 
 model Account {
-  id        String   @id @unique @default(uuid())
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  email     String   @unique
-  login     String?  @unique
+  id        String     @id @unique @default(uuid())
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  email     String     @unique
+  login     String?    @unique
   password  String?
-  google_id String?  @unique
+  google_id String?    @unique
+  Favorite  Favorite[]
 
   @@map("account")
 }
 
 model Product {
-  id                 String           @id @unique @default(uuid())
-  createdAt          DateTime         @default(now()) @map("created_at")
-  updatedAt          DateTime         @updatedAt @map("updated_at")
-  name               String
-  description        String
-  weight             Int?             @default(0)
-  volume             Int?             @default(0)
-  price              Int
-  photoPath          String           @default("")
-  productCategoryrId String?          @map("product_category_id")
-  ProductCategory    ProductCategory? @relation(fields: [productCategoryrId], references: [id], onDelete: Cascade)
+  id          String     @id @unique @default(uuid())
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  name        String
+  description String
+  weight      Int?       @default(0)
+  volume      Decimal?   @default(0)
+  price       Int
+  photoPath   String     @default("")
+  type        String
+  Favorite    Favorite[]
 
   @@map("product")
 }
 
-model ProductCategory {
-  id        String    @id @unique @default(uuid())
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
+model ProductIngredient {
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
   name      String
-  Product   Product[]
+  photoPath String   @default("")
 
-  @@map("product_category")
+  @@map("product_ingredient")
 }
 
-// model ProductIngredient {}
+model Favorite {
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  productId String   @map("project_id")
+  Product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  accountId String?  @map("account_id")
+  Account   Account? @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@map("favorite")
+}
