@@ -91,6 +91,27 @@ export class ProductService {
           id: accountId,
         },
       },
+      select: {
+        accountId: true,
+        createdAt: true,
+        id: true,
+        productId: true,
+        updatedAt: true,
+        Product: {
+          select: {
+            createdAt: true,
+            description: true,
+            id: true,
+            price: true,
+            name: true,
+            photoPath: true,
+            type: true,
+            volume: true,
+            weight: true,
+            updatedAt: true,
+          },
+        },
+      },
     });
 
     return {

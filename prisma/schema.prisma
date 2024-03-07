@@ -16,8 +16,31 @@ model Account {
   password  String?
   google_id String?    @unique
   Favorite  Favorite[]
+  Address   Address[]
 
   @@map("account")
+}
+
+model Ingredient {
+  id            String   @id @unique @default(uuid())
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  name          String
+  igredientPath String
+
+  @@map("ingredient")
+}
+
+model Address {
+  id           String   @id @unique @default(uuid())
+  createAt     DateTime @default(now())
+  street       String
+  streetNumber Int      @default(0) @map("street_number")
+  flat         Int      @default(0)
+  entrance     Int      @default(0)
+  floor        Int      @default(0)
+  Account      Account? @relation(fields: [accountId], references: [id])
+  accountId    String?
 }
 
 model Product {
