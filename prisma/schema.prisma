@@ -97,31 +97,6 @@ model Cart {
   productId String?
 }
 
-// model Order {
-//   id           Int          @id @default(autoincrement())
-//   createdAt    DateTime     @default(now()) @map("created_at")
-//   updatedAt    DateTime     @updatedAt @map("updated_at")
-//   status       STATUS       @default(CREATED)
-//   typeDelivery DeliveryType @default(DELIVERY)
-//   items        OrderItem[]
-
-// Account   Account? @relation(fields: [accountId], references: [id])
-// accountId String?
-// }
-
-// model OrderItem {
-// id        Int      @id @default(autoincrement())
-// createdAt DateTime @default(now()) @map("created_at")
-// updatedAt DateTime @updatedAt @map("updated_at")
-//   price     Int
-//   order     Order?   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-//   orderId   Int?     @map("order_id")
-
-//   quantity  Int
-//   Product   Product? @relation(fields: [productId], references: [id])
-//   productId String?
-// }
-
 model Order {
   id                  String       @id @unique @default(uuid())
   createdAt           DateTime     @default(now()) @map("created_at")
