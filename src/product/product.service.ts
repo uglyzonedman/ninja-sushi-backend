@@ -61,13 +61,33 @@ export class ProductService {
     );
 
     if (findProduct) {
-      await this.prismaService.favorite.delete({
+      const res = await this.prismaService.favorite.delete({
         where: {
           id: findProduct.id,
         },
+        select: {
+          Product: {
+            select: {
+              createdAt: true,
+              description: true,
+              id: true,
+              price: true,
+              name: true,
+              photoPath: true,
+              type: true,
+              volume: true,
+              weight: true,
+              updatedAt: true,
+            },
+          },
+        },
       });
+      return {
+        action: 'delete',
+        item: res,
+      };
     } else {
-      await this.prismaService.favorite.create({
+      const res = await this.prismaService.favorite.create({
         data: {
           Account: {
             connect: {
@@ -80,7 +100,27 @@ export class ProductService {
             },
           },
         },
+        select: {
+          Product: {
+            select: {
+              createdAt: true,
+              description: true,
+              id: true,
+              price: true,
+              name: true,
+              photoPath: true,
+              type: true,
+              volume: true,
+              weight: true,
+              updatedAt: true,
+            },
+          },
+        },
       });
+      return {
+        action: 'create',
+        item: res,
+      };
     }
   }
 

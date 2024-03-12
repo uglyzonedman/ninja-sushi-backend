@@ -152,4 +152,15 @@ export class AccountService {
       account: res,
     };
   }
+
+  async updateProfile(accountId: string, dto: AccountDto) {
+    return await this.prismaService.account.update({
+      where: {
+        id: accountId,
+      },
+      data: {
+        login: dto.login,
+      },
+    });
+  }
 }

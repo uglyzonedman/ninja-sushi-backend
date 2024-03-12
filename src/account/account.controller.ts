@@ -5,6 +5,7 @@ import {
   HttpCode,
   Param,
   Post,
+  Put,
   Req,
   Res,
   UseGuards,
@@ -61,5 +62,11 @@ export class AccountController {
   @Auth()
   async getProfile(@CurrentUser('id') id: string) {
     return await this.accountService.getById(id);
+  }
+
+  @Put('update-profile')
+  @Auth()
+  async updateProfile(@CurrentUser('id') id: string, @Body() dto: AccountDto) {
+    return await this.accountService.updateProfile(id, dto);
   }
 }

@@ -8,9 +8,11 @@ import { ProductModule } from './product/product.module';
 import { CookieParserMiddleware } from 'cookie-parser';
 import { AddressModule } from './address/address.module';
 import { IngredientsModule } from './ingredients/ingredients.module';
+import { CartModule } from './cart/cart.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
-  imports: [PrismaModule, AccountModule, ProductModule, AddressModule, IngredientsModule],
+  imports: [PrismaModule, AccountModule, ProductModule, AddressModule, IngredientsModule, CartModule, OrderModule],
   controllers: [AppController],
   providers: [AppService, GoogleStrategy],
 })

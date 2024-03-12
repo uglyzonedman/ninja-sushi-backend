@@ -17,6 +17,8 @@ model Account {
   google_id String?    @unique
   Favorite  Favorite[]
   Address   Address[]
+  Cart      Cart[]
+  Order     Order[]
 
   @@map("account")
 }
@@ -41,20 +43,23 @@ model Address {
   floor        Int      @default(0)
   Account      Account? @relation(fields: [accountId], references: [id])
   accountId    String?
+  Order        Order[]
 }
 
 model Product {
-  id          String     @id @unique @default(uuid())
-  createdAt   DateTime   @default(now()) @map("created_at")
-  updatedAt   DateTime   @updatedAt @map("updated_at")
+  id          String      @id @unique @default(uuid())
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
   name        String
   description String
-  weight      Int?       @default(0)
-  volume      Decimal?   @default(0)
+  weight      Int?        @default(0)
+  volume      Decimal?    @default(0)
   price       Int
-  photoPath   String     @default("")
+  photoPath   String      @default("")
   type        String
   Favorite    Favorite[]
+  Cart        Cart[]
+  OrderItem   OrderItem[]
 
   @@map("product")
 }
@@ -79,4 +84,87 @@ model Favorite {
   Account   Account? @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
   @@map("favorite")
+}
+
+model Cart {
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  quantity  Int
+  Account   Account? @relation(fields: [accountId], references: [id])
+  accountId String?
+  Product   Product? @relation(fields: [productId], references: [id])
+  productId String?
+}
+
+// model Order {
+//   id           Int          @id @default(autoincrement())
+//   createdAt    DateTime     @default(now()) @map("created_at")
+//   updatedAt    DateTime     @updatedAt @map("updated_at")
+//   status       STATUS       @default(CREATED)
+//   typeDelivery DeliveryType @default(DELIVERY)
+//   items        OrderItem[]
+
+// Account   Account? @relation(fields: [accountId], references: [id])
+// accountId String?
+// }
+
+// model OrderItem {
+// id        Int      @id @default(autoincrement())
+// createdAt DateTime @default(now()) @map("created_at")
+// updatedAt DateTime @updatedAt @map("updated_at")
+//   price     Int
+//   order     Order?   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+//   orderId   Int?     @map("order_id")
+
+//   quantity  Int
+//   Product   Product? @relation(fields: [productId], references: [id])
+//   productId String?
+// }
+
+model Order {
+  id                  String       @id @unique @default(uuid())
+  createdAt           DateTime     @default(now()) @map("created_at")
+  updatedAt           DateTime     @updatedAt @map("updated_at")
+  status              STATUS       @default(CREATED)
+  typeDelivery        DeliveryType @default(DELIVERY)
+  typePayment         TypePayment  @default(cash_to_courier)
+  Account             Account?     @relation(fields: [accountId], references: [id])
+  accountId           String?
+  Address             Address?     @relation(fields: [addressId], references: [id])
+  addressId           String?
+  name                String
+  phoneNumber         String
+  dontRingTheDoorbell Boolean      @default(false) @map("dont_ring_the_doorbell")
+  leaveItAtTheDoor    Boolean      @default(false) @map("leave_it_at_the_door")
+  comment             String?      @default("")
+  OrderItem           OrderItem[]
+  totalSum            Int?
+}
+
+model OrderItem {
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  price     Int
+  order     Order?   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId   String?  @map("order_id")
+  quantity  Int
+  Product   Product? @relation(fields: [productId], references: [id])
+  productId String?
+}
+
+enum DeliveryType {
+  DELIVERY
+  PICKUP
+}
+
+enum STATUS {
+  CREATED
+  ACCEPTED
+}
+
+enum TypePayment {
+  cash_to_courier
+  payment_by_terminal_to_the_courier
 }
